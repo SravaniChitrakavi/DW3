@@ -23,7 +23,7 @@ form {
 }
 
 .book--title {
-  font-weight: 500;
+  font-weight: bold;
   color: $gray80;
   margin-bottom: $spacing-xs;
 }
@@ -68,5 +68,5 @@ form {
   justify-content: center;
   min-height: 50vh;
   font-size: 1.5rem;
-  color: $gray40;
+  color: black;
 }

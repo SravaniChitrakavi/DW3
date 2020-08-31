@@ -8,7 +8,7 @@
       formControlName="term"
     />
     <button mat-icon-button matSuffix>
-      <mat-icon>search</mat-icon>
+      Search <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
 </form>
@@ -21,7 +21,7 @@
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img src="{{ b.coverUrl }}" />
+          <img src="{{ b.coverUrl }}" alt="{{ b.title }}"/>
         </div>
         <div class="book--content--info">
           <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
