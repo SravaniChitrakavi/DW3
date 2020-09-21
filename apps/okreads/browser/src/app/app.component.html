@@ -6,7 +6,8 @@
         <div>
           <button
             data-testing="toggle-reading-list"
-            mat-flat-button class="reading-list"
+            mat-button class="reading-list"
+            aria-label="reading-list-button"
             (click)="drawer.toggle()"
           >
             Reading List
@@ -23,7 +24,7 @@
     <div class="reading-list-container" data-testing="reading-list-container">
       <h2>
         My Reading List
-        <button mat-icon-button (click)="drawer.close()">
+        <button mat-icon-button aria-label="close-reading-list" (click)="drawer.close()">
           <mat-icon>close</mat-icon>
         </button>
       </h2>

@@ -7,35 +7,36 @@
       placeholder="Search for books to add to your reading list"
       formControlName="term"
     />
-    <button mat-icon-button matSuffix>
-      Search <mat-icon>search</mat-icon>
+    <button mat-icon-button matSuffix aria-label="search icon">
+      <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
 </form>
 
 <ng-container *ngIf="searchTerm; else empty">
   <div class="book-grid">
-    <div class="book" data-testing="book-item" *ngFor="let b of books">
+    <div class="book" data-testing="book-item" *ngFor="let book of books$ | async">
       <div class="book--title">
-        {{ b.title }}
+        {{ book.title }}
       </div>
       <div class="book--content">
         <div class="book--content--cover">
-          <img src="{{ b.coverUrl }}" alt="{{ b.title }}"/>
+          <img src="{{ book.coverUrl }}" alt="{{ book.title }}"/>
         </div>
         <div class="book--content--info">
-          <div><strong>Author:</strong> {{ b.authors.join(',') }}</div>
-          <div><strong>Publisher:</strong> {{ b.publisher }}</div>
+          <div><strong>Author:</strong> {{ book.authors.join(',') }}</div>
+          <div><strong>Publisher:</strong> {{ book.publisher }}</div>
           <div>
-            <strong>Published:</strong> {{ formatDate(b.publishedDate) }}
+            <strong>Published:</strong> {{ formatDate(book.publishedDate) }}
           </div>
-          <p [innerHTML]="b.description"></p>
+          <p [innerHTML]="book.description"></p>
           <div>
             <button
               mat-flat-button
               color="primary"
-              (click)="addBookToReadingList(b)"
-              [disabled]="b.isAdded"
+              [attr.aria-label]="'Add' + book.title + 'to reading list'"
+              (click)="addBookToReadingList(book)"
+              [disabled]="book.isAdded"
             >
               Want to Read
             </button>

@@ -19,7 +19,7 @@ export const addToReadingList = createAction(
 
 export const failedAddToReadingList = createAction(
   '[Reading List API] Failed add to list',
-  props<{ error: string }>()
+  props<{ item: ReadingListItem }>()
 );
 
 export const confirmedAddToReadingList = createAction(
@@ -34,7 +34,7 @@ export const removeFromReadingList = createAction(
 
 export const failedRemoveFromReadingList = createAction(
   '[Reading List API] Failed remove from list',
-  props<{ error: string }>()
+  props<{ book: Book }>()
 );
 
 export const confirmedRemoveFromReadingList = createAction(

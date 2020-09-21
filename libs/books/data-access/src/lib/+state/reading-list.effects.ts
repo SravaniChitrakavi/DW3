@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Actions, createEffect, ofType, OnInitEffects } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, concatMap, exhaustMap, map } from 'rxjs/operators';
-import { ReadingListItem } from '@tmo/shared/models';
+import { ReadingListItem, Book } from '@tmo/shared/models';
 import * as ReadingListActions from './reading-list.actions';
 
 @Injectable()
@@ -32,9 +32,14 @@ export class ReadingListEffects implements OnInitEffects {
       concatMap(({ book }) =>
         this.http.post('/api/reading-list', book).pipe(
           map(() => ReadingListActions.confirmedAddToReadingList({ book })),
-          catchError((error: Error) =>
-            of(ReadingListActions.failedAddToReadingList({ error: error.message }))
-          )
+            catchError(() => {
+                // optimistic UI update - remove book from reading list in case of API error
+                const item: ReadingListItem = {
+                    ...book,
+                    bookId: book.id
+                };
+                return of(ReadingListActions.failedAddToReadingList({ item }));
+            })
         )
       )
     )
@@ -48,17 +53,21 @@ export class ReadingListEffects implements OnInitEffects {
           map(() =>
             ReadingListActions.confirmedRemoveFromReadingList({ item })
           ),
-          catchError((error: Error) =>
-            of(ReadingListActions.failedRemoveFromReadingList({ error: error.message }))
-          )
+          catchError(() => {
+              // optimistic UI update - add back book to reading list in case of API error
+              const book: Book = {
+                ...item,
+                id: item.bookId
+              };
+              return of(ReadingListActions.failedRemoveFromReadingList({ book }));
+          })
         )
       )
-    )
-  );
+    ));
 
   ngrxOnInitEffects() {
     return ReadingListActions.init();
   }
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  constructor(private readonly actions$: Actions, private readonly http: HttpClient) {}
 }
