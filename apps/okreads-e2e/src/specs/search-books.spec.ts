@@ -16,12 +16,18 @@ describe('When: Use the search feature', () => {
     expect(items.length).toBeGreaterThan(1);
   });
 
-  xit('Then: I should see search results as I am typing', async () => {
+  it('Then: I should see search results as I am typing', async () => {
     await browser.get('/');
     await browser.wait(
       ExpectedConditions.textToBePresentInElement($('tmo-root'), 'okreads')
     );
-
-    // TODO: Implement this test!
+    // get input/search field
+    const input = await $('input[type="search"]');
+    // enter keyword in order to search
+    await input.sendKeys('angular');
+    // get the list of all books from book-grid
+    const bookItems = await $$('[data-testing="book-item"]');
+    // Assume at least 1 book to get displayed
+    expect(bookItems.length).toBeGreaterThan(1, 'Instant search is not displaying books');
   });
 });
