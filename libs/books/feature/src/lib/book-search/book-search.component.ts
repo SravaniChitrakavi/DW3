@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   addToReadingList,
@@ -17,9 +17,9 @@ import {debounceTime, distinctUntilChanged, takeUntil } from "rxjs/operators";
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent implements OnInit, OnDestroy {
+export class BookSearchComponent implements OnDestroy {
   books$: Observable<ReadingListBook[]>;
-  unsubscribe$: Subject<any> = new Subject<any>();
+    unsubscribe$: Subject<void> = new Subject();
 
   searchForm = this.fb.group({
     term: ''
@@ -30,11 +30,13 @@ export class BookSearchComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder
   ) {
     this.books$ = this.store.select(getAllBooks);
-  }
-
-  public ngOnInit(): void {
-    // handle instant search
-    this.searchBooks();
+    this.searchForm.valueChanges.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.unsubscribe$),
+      debounceTime(500)
+    ).subscribe(searchValue => {
+      this.searchBooks()
+    });
   }
 
   get searchTerm(): string {
@@ -57,21 +59,15 @@ export class BookSearchComponent implements OnInit, OnDestroy {
   }
 
   searchBooks() {
-    // get search value from form
-    this.searchForm.valueChanges.pipe(
-        takeUntil(this.unsubscribe$),
-        debounceTime(500),
-        distinctUntilChanged()
-    ).subscribe(searchValue => {
-      return searchValue !== '' ?
-          this.store.dispatch(searchBooks({ term: this.searchTerm })) :
-          this.store.dispatch(clearSearch())
-    });
+    if (this.searchForm.value.term) {
+      this.store.dispatch(searchBooks({ term: this.searchTerm }));
+    } else {
+      this.store.dispatch(clearSearch());
+    }
   }
 
   public ngOnDestroy() {
-    // unsubscribe to avoid data leaks
-    this.unsubscribe$.next(null);
+    this.unsubscribe$.next();
     this.unsubscribe$.unsubscribe();
   }
 }
