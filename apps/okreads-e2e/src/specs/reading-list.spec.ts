@@ -41,7 +41,6 @@ describe('When: I use the reading list feature', () => {
 
     // snackbar ele
     const snackbar =  await $$('snack-bar-container .mat-button');
-    console.log('snackbar', snackbar);
     await browser.wait(
         ExpectedConditions.textToBePresentInElement(snackbar[0], 'Undo')
     );
