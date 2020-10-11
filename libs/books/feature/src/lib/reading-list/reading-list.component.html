@@ -7,7 +7,28 @@
       <strong class="reading-list-item--details--title">{{ readingList.title }}</strong>
       <div class="reading-list-item--details--author">
         {{ readingList.authors.join(',') }}
+        <div data-finished-reading-book-testing="finished-book-reading-details" *ngIf="(readingList?.finished)">You've finished reading on {{ formatDate(readingList?.finishedDate) }}</div>
       </div>
+    </div>
+    <div>
+      <button data-finish-button="reading-list-finish-button" *ngIf="!readingList?.finished; else finishedButton"
+        mat-icon-button
+        color="primary"
+        [attr.aria-label]="'Mark ' + ' ' + readingList.title + ' ' + 'as finished'"
+        [disabled]="readingList.finished"
+        (click)="markBookAsFinished(readingList)">
+        <mat-icon>done</mat-icon>
+      </button>
+      <ng-template #finishedButton>
+        <button
+          data-finished-button="reading-list-finished-button"
+          mat-icon-button
+          color=""
+          [attr.aria-label]="'Marked' + ' ' + readingList.title + ' ' + 'as finished'"
+        >
+          <mat-icon>check_circle_outline</mat-icon>
+        </button>
+      </ng-template>
     </div>
     <div>
       <button
