@@ -16,12 +16,6 @@ export class ReadingListComponent {
     this.store.dispatch(removeFromReadingList({ item }));
   }
 
-  formatDate(date: void | string) {
-    return date
-        ? new Intl.DateTimeFormat('en-US').format(new Date(date))
-        : undefined;
-  }
-
   markBookAsFinished(bookDetails) {
     const item = {...bookDetails, finished: true, finishedDate: (new Date()).toISOString()};
     this.store.dispatch(markBookAsFinishedInReadingList({item}));

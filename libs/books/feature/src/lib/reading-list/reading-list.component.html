@@ -7,7 +7,7 @@
       <strong class="reading-list-item--details--title">{{ readingList.title }}</strong>
       <div class="reading-list-item--details--author">
         {{ readingList.authors.join(',') }}
-        <div data-finished-reading-book-testing="finished-book-reading-details" *ngIf="(readingList?.finished)">You've finished reading on {{ formatDate(readingList?.finishedDate) }}</div>
+        <div data-finished-reading-book-testing="finished-book-reading-details" *ngIf="(readingList?.finished)">You've finished reading on {{ (readingList?.finishedDate) | date }}</div>
       </div>
     </div>
     <div>
